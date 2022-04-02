@@ -11,14 +11,14 @@ For this, one must
 1. Configure this CNI plugin.
 1. Create the `podman` network
 1. Configure the IPs, IP links and routing tables.
-1. Install the DNS resolver of your choice.
-1. Optional: install `unbound`to become fully independent from your ISP or big tech DNS resolvers.
+1. Optional: install the DNS resolver of your choice.
+1. Optional: install `unbound` to become fully independent from your ISP or big tech DNS resolvers.
 
 ## Creating a Corporate VLAN without DHCP
 
-Follow the instructions from [Step 1](https://github.com/boostchicken-dev/udm-utilities/wiki/Run-a-Wireguard-VPN-server-on-UDM-Pro#step-1-create-dedicated-corporate-without-dhcp-for-the-vpn). For this example, we use VLAN 5 (instead of 240).
+Follow the instructions from the `wireguard`-Wiki, [Step 1](https://github.com/boostchicken-dev/udm-utilities/wiki/Run-a-Wireguard-VPN-server-on-UDM-Pro#step-1-create-dedicated-corporate-without-dhcp-for-the-vpn) only. For this example, we use VLAN 5 (instead of 240).
 
-All `macvlan`IP addresses will live in this Corporate VLAN.
+All `macvlan` IP addresses will live in this Corporate VLAN.
 
 ## CNI plugin installation
 
@@ -33,7 +33,7 @@ chmod +x /mnt/data/on_boot.d/05-install-cni-plugins.sh
 
 ### Creating a MAC address
 
-The CNI Interface will require a unique MAC address, this can be generated with the [MAC address generator](https://github.com/alxwolf/udm-utilities/blob/master/cni-plugins/tools.md#mac-address-generator).
+The CNI Interface will require a unique MAC address, this can be generated with the [MAC address generator](https://github.com/alxwolf/udm-utilities/blob/master/cni-plugins/tools.md#mac-address-generator) or an [online tool](https://onlinerandomtools.com/generate-random-mac).
 
 ```bash
 cd /mnt/data/podman/cni
@@ -66,7 +66,7 @@ It's beneficial to have and keep a hard-coded MAC address, like described also i
 
 Above configuration can be extended to also use and serve IPv6 addresses.
 
-If there is no public IPv6 address assigned to the network, use of an ULA is recommended. An ULA (Unique Local Address) allows to have a fixed, local/private IP address for your DNS resolver. How to get the corresponding prefix is described [here](ula-generator).
+If there is no public IPv6 address assigned to the network, use of an ULA is recommended. An ULA (Unique Local Address) allows to have a fixed, local/private IP address for your DNS resolver. How to get the corresponding prefix is described [here](https://github.com/alxwolf/udm-utilities/blob/unbound/cni-plugins/tools.md#ula-generator).
 
 Instead of doing the IPv4 steps, setup is:
 
