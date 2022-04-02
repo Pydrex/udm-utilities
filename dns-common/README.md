@@ -101,50 +101,10 @@ On first execution (if the DNS resolver container has not been initialized yet),
 
 ## Finally, get the DNS resolver(s) running
 
-Choose the Ad-/tracking blocker to your liking from the [main project page](https://github.com/boostchicken-dev/udm-utilities).
+Choose the ad-/tracking blocker to your liking from the [main project page](https://github.com/boostchicken-dev/udm-utilities).
 
 If you want to run your own `unbound`, check [here](https://github.com/alxwolf/udm-utilities/blob/master/unbound/README.md).
 
 ## Useful links and tools
 
-### MAC address generator
-
-This [MAC address generator](https://gist.github.com/INA2N/079adda7d6e5612996e4e993152d7103) will provide a random MAC address.
-
-Run with
-
-```bash
-[UDM] root@udm-pro:/mnt/data/podman/cni# ./macgen.sh 
-EE:CC:EC:A2:7C:D1
-```
-
-In this example, the partial config in [21-unbound.conflist](cni-plugins/21-unbound.conflist) or [21-unboundipv6.conflist](cni-plugins/21-unboundipv6.conflist) would be
-
-```json
-    {
-      "type": "macvlan",
-      "mode": "bridge",
-      "master": "br5",
-      "mac": "EE:CC:EC:A2:7C:D1",
-      "ipam": {
- ```
-
-### ULA generator
-
-This [Python script](https://github.com/n-st/python-ula) will provide a unique, valid prefix for IPv6 Unique Local Addresses (starting with fdxx:...).
-
-Run with
-
-```bash
-[UDM] root@udm-pro:/mnt/data# python ula.py
-fdca:5c13:1fb8::
-```
-
-In this example, the partial config in [21-unboundipv6.conflist](cni-plugins/21-unboundipv6.conflist) would be
-
-```json
-    {
-        "address": "fdca:5c13:1fb8::4/64",
-        "gateway": "fdca:5c13:1fb8::1"
-    }
-```
+Those are listed in a [separate document](https://github.com/alxwolf/udm-utilities/blob/master/cni-plugins/tools.md).
