@@ -33,7 +33,7 @@ chmod +x /mnt/data/on_boot.d/05-install-cni-plugins.sh
 
 ### Creating a MAC address
 
-The CNI Interface will require a unique MAC address, this can be generated with the [MAC address generator](mac-address-generator).
+The CNI Interface will require a unique MAC address, this can be generated with the [MAC address generator](https://github.com/alxwolf/udm-utilities/blob/master/cni-plugins/tools.md#mac-address-generator).
 
 ```bash
 cd /mnt/data/podman/cni
@@ -103,7 +103,7 @@ On first execution (if the DNS resolver container has not been initialized yet),
 
 Choose the Ad-/tracking blocker to your liking from the [main project page](https://github.com/boostchicken-dev/udm-utilities).
 
-If you want to run your own `unbound`, check [here](unbound).
+If you want to run your own `unbound`, check [here](https://github.com/alxwolf/udm-utilities/blob/master/unbound/README.md).
 
 ## Useful links and tools
 
