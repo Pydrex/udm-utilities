@@ -1,17 +1,17 @@
 {
   "cniVersion": "0.4.0",
-  "name": "dns",
+  "name": "unbound",
   "plugins": [
     {
       "type": "macvlan",
       "mode": "bridge",
       "master": "br5",
-      "mac": "<insert the MAC address you created here, like EE:CC:EC:A2:7C:D1",
+      "mac": "<insert the MAC address you created here, like EE:CC:EC:A2:7C:D1>",
       "ipam": {
         "type": "static",
         "addresses": [
           {
-            "address": "10.0.5.2/24",
+            "address": "10.0.5.3/24",
             "gateway": "10.0.5.1"
           }
         ],

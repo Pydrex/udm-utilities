@@ -3,11 +3,12 @@
 ## Features
 
 1. Run Pi-hole on your UDM with a completely isolated network stack.  This will not port conflict or be influenced by any changes on by Ubiquiti
-2. Persists through reboots and firmware updates.
+1. Persists through reboots and firmware updates.
 
 ## Requirements
 
-1. You have successfully setup the on boot script described [here](https://github.com/boostchicken-dev/udm-utilities/tree/master/on-boot-script)
+1. You have successfully setup the on boot script described [here](../on-boot-script)
+1. You have configured the common part for DNS as described [here](../dns-common/README.md)
 
 ## Customization
 
@@ -17,17 +18,17 @@
 
 ## Steps
 
-1. Copy [05-install-cni-plugins.sh](../cni-plugins/05-install-cni-plugins.sh) to /mnt/data/on_boot.d
-1. Execute /mnt/data/on_boot.d/05-install-cni-plugins.sh
 1. On your controller, make a Corporate network with no DHCP server and give it a VLAN. For this example we are using VLAN 5.
 1. Copy [20-dns.conflist](../cni-plugins/20-dns.conflist) to /etc/cni/net.d.  This will create your podman macvlan network
-```shell
-podman network create dns
-curl -L https://github.com/boostchicken-dev/udm-utilities/raw/master/cni-plugins/20-dns.conflist -o /etc/cni/net.d/dns.conflist
-```
-5. Copy [10-dns.sh](../dns-common/on_boot.d/10-dns.sh) to /mnt/data/on_boot.d and update its values to reflect your environment
 
+   ```bash
+   podman network create dns
+   curl -L https://github.com/boostchicken-dev/udm-utilities/raw/master/cni-plugins/20-dns.conflist -o /etc/cni/net.d/dns.conflist
    ```
+
+1. Copy [10-dns.sh](../dns-common/on_boot.d/10-dns.sh) to /mnt/data/on_boot.d and update its values to reflect your environment
+
+   ```bash
    ...
    VLAN=5
    IPV4_IP="10.0.5.3"
@@ -37,10 +38,10 @@ curl -L https://github.com/boostchicken-dev/udm-utilities/raw/master/cni-plugins
    ...
    ```   
 
-6. Execute /mnt/data/on_boot.d/10-dns.sh
+1. Execute /mnt/data/on_boot.d/10-dns.sh
 1. Create directories for persistent Pi-hole configuration
 
-   ```
+   ```bash
    mkdir -p /mnt/data/etc-pihole
    mkdir -p /mnt/data/pihole/etc-dnsmasq.d
    ```

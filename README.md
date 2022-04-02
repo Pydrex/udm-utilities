@@ -34,16 +34,15 @@ Follow this [readme](https://github.com/boostchicken-dev/udm-utilities/blob/mast
 
 **It enables complete customization of your UDM/P and fills the gap that config.gateway.json left behind.**
 
+### container-common
+
+Apply this after on-boot-script. Updates container defaults to maintain **stable disk usage footprint** of custom containers.
+**Prevents logs filling up UDM storage full**.
+
 ### podman-update
 
 Updates Podman, conmon, and runc to a recent version.
 This allows docker-compose usage as well.
-
-### container-common
-
-Apply this after on-boot-script.
-Updates container defaults to maintain **stable disk usage footprint** of custom containers.
-**Prevents logs filling up UDM storage full**.
 
 ### python
 
@@ -53,21 +52,19 @@ If you need python3 on your UDM, generally not recommended, can always use it in
 
 <https://github.com/fire1ce/UDMP-Persistence-SSH-Keys>
 
-Script to presist ssh keys after reboot
+Script to persist ssh keys after reboot.
 
 ## VPN Servers / Clients
-
-### wireguard-go
-
-Run a Wireguard client/server on your UDM/P.
-Utilizes wireguard-go, not linux kernel modules.
-The performance will take a hit due to that.
 
 ### WireGuard kernel module for UDM/P
 
 <https://github.com/tusc/wireguard-kmod>
 
 Uses a prebuilt linux kernel module, without the need to move to a custom kernel.
+
+### wireguard-go
+
+Run a Wireguard client/server on your UDM/P. Utilizes wireguard-go, not linux kernel modules. The performance will take a hit due to that.
 
 ### OpenConnect VPN
 
@@ -85,39 +82,51 @@ It supports OpenVPN, WireGuard, and OpenConnect (Cisco AnyConnect) clients runni
 
 ## DNS Providers
 
-Install a DNS server that functions as a network-wide ad and tracker blocker, and which can also securely proxy encrypted DNS requests to an upstream DNS provider.
-Begin by following the instructions to setup [on-boot-script](https://github.com/boostchicken-dev/udm-utilities/tree/master/on-boot-script) and [dns-common](https://github.com/boostchicken-dev/udm-utilities/tree/master/dns-common/on_boot.d).
-Then, follow the guides below to setup either Pi-Hole, NextDNS, or AdGuard Home.
+Install a DNS server on the UDM/P that functions as a network-wide ad and tracker blocker, and which can also securely proxy encrypted DNS requests to an upstream DNS provider. You may also run unbound as a local resolver.
+
+Begin by following the instructions to setup
+
+* [on-boot-script](https://github.com/boostchicken-dev/udm-utilities/tree/master/on-boot-script), then
+* [dns-common](https://github.com/boostchicken-dev/udm-utilities/tree/master/dns-common/).
+
+After this basic configuration, follow the guides below to setup either Pi-Hole (with DoH or DoTE), AdGuard Home and unbound.
 
 ### dns-common
 
 Base configuration for DNS server containers, both IPv4 and IPv6.
-Utilizes MacVLAN CNI plugins to completely isolate the network stack.
+Utilizes MacVLAN CNI plugins to completely isolate the network stack. Basic setup instructions are available [here](dns-common/README.md).
 
 ### run-pihole
 
 [![!Docker Pulls](https://img.shields.io/docker/pulls/boostchicken/pihole.svg?color=green&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/u/boostchicken)
 
-PiHole w/ DoH Image.
+[PiHole w/ DoH](run-pihole) Image.
 Run Pi-hole on your UDM with podman.
 Also contains custom image for Pi-hole with `cloudflared`.
 
 ### PiHole with DoTe
+
 [![!Docker Pulls](https://img.shields.io/docker/pulls/boostchicken/pihole-dote.svg?color=green&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/u/boostchicken)
 
-Desigened by: <https://github.com/chrisstaite/DoTe/>
+Designed by: <https://github.com/chrisstaite/DoTe/>
 
-Alternative to mine which uses DoTe
+Alternative to mine which uses [Pi-Hole with DoTe](https://github.com/boostchicken-dev/udm-utilities/tree/master/run-pihole#pihole-with-dote).
 
 ### AdguardHome
 
-Run AdguardHome on your UDM with podman.
+Run [AdguardHome](AdguardHome) on your UDM with podman.
 
-### Cloudflare DDNS
+### unbound
 
-Update your cloudflare domains from your UDM with podman.
+[![!Docker Pulls](https://img.shields.io/docker/pulls/klutchell/unbound.svg?color=green&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/klutchell/unbound)
+
+Run [unbound](https://nlnetlabs.nl/projects/unbound/about/), your own validating, recursive, caching DNS resolver. Link it with any of the ad-/tracker blockers to become independent from your ISP or big tech DNS.
 
 ## Cool projects you can use with this
+
+### Cloudflare Dynamic DNS
+
+Update your cloudflare domains from your UDM with podman.
 
 ### multicast-relay
 
@@ -180,7 +189,7 @@ Use telegram bot to be notified of a wan failover with local account
 
 ## Unsupported / No longer maintained
 
-### nextdns
+### NextDNS
 
 Run NextDNS on your UDM with podman.
 
