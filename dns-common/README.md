@@ -9,7 +9,10 @@ For this, one must
 1. Create a dedicated VLAN without DHCP on the UDM/P.
 1. Install the CNI (Container Network Interface) plugin, this will allow to access the container via a dedicated IPv4 and IPv6 address.
 1. Configure this CNI plugin.
-1. Configure the IP links and routing tables.
+1. Create the `podman` network
+1. Configure the IPs, IP links and routing tables.
+1. Install the DNS resolver of your choice.
+1. Optional: install `unbound`to become fully independent from your ISP or big tech DNS resolvers.
 
 ## Creating a Corporate VLAN without DHCP
 
@@ -19,12 +22,11 @@ All `macvlan`IP addresses will live in this Corporate VLAN.
 
 ## CNI plugin installation
 
-Copy the [05-install-cni-plugins.sh](https://github.com/alxwolf/udm-utilities/blob/87b9f7dac6b3163bb5c09fc9bcb86fcfa7fa0c59/cni-plugins/05-install-cni-plugins.sh) script to /mnt/data/on_boot.d/ and run it.
+Copy the [05-install-cni-plugins.sh](https://github.com/alxwolf/udm-utilities/blob/87b9f7dac6b3163bb5c09fc9bcb86fcfa7fa0c59/cni-plugins/05-install-cni-plugins.sh) script to `/mnt/data/on_boot.d/`. Do not run it yet.
 
 ```bash
 curl -Lo /mnt/data/on_boot.d/05-install-cni-plugins.sh https://raw.githubusercontent.com/boostchicken-dev/udm-utilities/master/cni-plugins/05-install-cni-plugins.sh
 chmod +x /mnt/data/on_boot.d/05-install-cni-plugins.sh
-./05-install-cni-plugins.sh
 ```
 
 ## CNI plugin configuration
@@ -40,7 +42,7 @@ chmod +x macgen.sh
 ./macgen.sh
 ```
 
-will deliver a result similar to 
+will deliver a result similar to
 
 ```bash
 EE:CC:EC:A2:7C:D1
@@ -48,7 +50,7 @@ EE:CC:EC:A2:7C:D1
 
 It's beneficial to have and keep a hard-coded MAC address, like described also in this [Wiki](..wiki/Update-your-MacVLAN-containers-to-have-hardcoded-MAC-addresses) entry.
 
-### IPv4 configuration
+### IPv4 only configuration
 
 * Copy [20-dns.conflist](cni-plugins/20-dns.conflist) to `/mnt/data/podman/cni/`.
 
@@ -60,27 +62,48 @@ It's beneficial to have and keep a hard-coded MAC address, like described also i
 * Insert the MAC address you generated in line 9.
 * Adjust the IP address and gateway to your liking, if required.
 
-### IPv6 configuration
+### IPv6 and IPv6 configuration
 
-*
+Above configuration can be extended to also use and serve IPv6 addresses.
+
+If there is no public IPv6 address assigned to the network, use of an ULA is recommended. An ULA (Unique Local Address) allows to have a fixed, local/private IP address for your DNS resolver. How to get the corresponding prefix is described [here](ula-generator).
+
+Instead of doing the IPv4 steps, setup is:
+
 * Copy [20-dnsipv6.conflist](cni-plugins/20-dnsipv6.conflist) to `/mnt/data/podman/cni/`.
 
      ```bash
     curl -Lo /mnt/data/podman/cni/20-dnsipv6.conflist https://raw.githubusercontent.com/boostchicken-dev/udm-utilities/master/cni-plugins/20-dnsipv6.conflist
     ```
 
-* If you created a different Corporate VLAN than 5 on the UDM/P: adjust the value `br5`to your VLAN number
+* If you created a different Corporate VLAN than 5 on the UDM/P: adjust the value `br5` to your VLAN number
 * Insert the MAC address you generated in line 9.
 * Adjust the IPv4 and IPv6 address and gateway to your liking, if required.
 
+## Creating the `podman` network
 
-Create a link in `/etc/cni/net.d/` to the configuration file you just created.
+Create the `podman` macvlan network and run the CNI installer script. This script will be executed on each boot and will create the links in `/etc/cni/net.d/` to the configuration file you just adjusted.
 
 ```bash
-ln -s /etc/cni/net.d/ /mnt/data/podman/cni/20-dns.conflist
+podman network create dns
+/bin/sh /mnt/data/on_boot.d/05-install-cni-plugins.sh
 ```
 
-This will create your podman macvlan network.
+Copy [10-dns.sh](dns-common/on_boot.d/10-dns.sh) to `/mnt/data/on_boot.d/`, update it to your modified values if required, execute the script.
+
+```bash
+curl -Lo /mnt/data/on_boot.d/10-dns.sh https://raw.githubusercontent.com/alxwolf/udm-utilities/unbound/dns-common/on_boot.d/10-dns.sh
+chmod +x /mnt/data/on_boot.d/10-dns.sh
+/bin/sh /mnt/data/on_boot.d/10-dns.sh
+```
+
+On first execution (if the DNS resolver container has not been initialized yet), you can expect to get an error ("Container xyz not found"). That is of no concern.
+
+## Finally, get the DNS resolver(s) running
+
+Choose the Ad-/tracking blocker to your liking from the [main project page](https://github.com/boostchicken-dev/udm-utilities).
+
+If you want to run your own `unbound`, check [here](unbound).
 
 ## Useful links and tools
 

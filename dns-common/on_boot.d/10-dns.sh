@@ -28,7 +28,7 @@ IPV6_GW=""
 # e.g. "br0" or "br0 br1" etc.
 FORCED_INTFC=""
 
-# container name; e.g. nextdns, pihole, adguardhome, etc.
+# container name; e.g. pihole, adguardhome, etc.
 CONTAINER=pihole
 
 if ! test -f /opt/cni/bin/macvlan; then
