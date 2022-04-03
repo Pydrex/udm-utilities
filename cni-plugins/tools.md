@@ -24,7 +24,7 @@ In this example, the partial config in [20-dns.conflist](https://github.com/alxw
 
 ### ULA generator
 
-This [Python script](https://github.com/n-st/python-ula) will provide a unique, valid prefix for IPv6 Unique Local Addresses (starting with fdxx:...).
+This [python script](https://github.com/n-st/python-ula) will provide a unique, valid prefix for IPv6 Unique Local Addresses (starting with fdxx:...).
 
 Run with
 

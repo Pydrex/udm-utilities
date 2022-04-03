@@ -107,4 +107,4 @@ If you want to run your own `unbound`, check [here](https://github.com/alxwolf/u
 
 ## Useful links and tools
 
-Those are listed in a [separate document](https://github.com/alxwolf/udm-utilities/blob/master/cni-plugins/tools.md).
+Those are listed in a [separate document](https://github.com/alxwolf/udm-utilities/blob/unbound/cni-plugins/tools.md).
