@@ -6,7 +6,7 @@
       "type": "macvlan",
       "mode": "bridge",
       "master": "br5",
-      "mac": "<insert the MAC address you created here, like EE:CC:EC:A2:7C:D1>",
+      "mac": "insert the MAC address you created here, like <EE:CC:EC:A2:7C:D1>",
       "ipam": {
         "type": "static",
         "addresses": [

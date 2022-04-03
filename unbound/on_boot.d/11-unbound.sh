@@ -2,7 +2,7 @@
 
 ## configuration variables:
 VLAN=5
-IPV4_IP="10.0.5.2"
+IPV4_IP="10.0.5.3"
 # This is the IP address of the container. You may want to set it to match
 # your own network structure such as 192.168.5.3 or similar.
 IPV4_GW="10.0.5.1/24"
@@ -20,15 +20,14 @@ IPV4_GW="10.0.5.1/24"
 # IPv6 Also works with Prefix Delegation from your provider. The gateway is the
 # IP of br(VLAN) and you can pick any ip address within that subnet that dhcpv6
 # isn't serving
-IPV6_IP=""
-IPV6_GW=""
+IPV6_IP="fdca:5c13:1fb8::3"
+IPV6_GW="fdca:5c13:1fb8::1/64"
 
-# set this to the interface(s) on which you want DNS TCP/UDP port 53 traffic
-# re-routed through the DNS container. separate interfaces with spaces.
-# e.g. "br0" or "br0 br1" etc.
-FORCED_INTFC=""
+# to deactivate IPv6, uncomment lines below and comment out the lines above
+#IPV6_IP=""
+#IPV6_GW=""
 
-# container name; e.g. pihole, adguardhome, etc.
+# container name:unbound
 CONTAINER=unbound
 
 if ! test -f /opt/cni/bin/macvlan; then
@@ -37,11 +36,8 @@ if ! test -f /opt/cni/bin/macvlan; then
     exit 1
 fi
 
-# set VLAN bridge promiscuous
-ip link set "br${VLAN}" promisc on
-
-# create macvlan bridge and add IPv4 IP
-ip link add "br${VLAN}.mac" link "br${VLAN}" type macvlan mode bridge
+# we assume that the VLAN bridge already exists, created by the filtering DNS (pi-hole) script
+# add IPv4 IP
 ip addr add "${IPV4_GW}" dev "br${VLAN}.mac" noprefixroute
 
 # (optional) add IPv6 IP to VLAN bridge macvlan bridge
@@ -49,11 +45,7 @@ if [ -n "${IPV6_GW}" ]; then
   ip -6 addr add "${IPV6_GW}" dev "br${VLAN}.mac" noprefixroute
 fi
 
-# set macvlan bridge promiscuous and bring it up
-ip link set "br${VLAN}.mac" promisc on
-ip link set "br${VLAN}.mac" up
-
-# add IPv4 route to DNS container
+# add IPv4 route to unbound container
 ip route add "${IPV4_IP}/32" dev "br${VLAN}.mac"
 
 # (optional) add IPv6 route to DNS container
